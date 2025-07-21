@@ -3,10 +3,12 @@ import db from '@/lib/db';
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Record<string, string> }
 ) {
+  const id = context.params.id;
+
   try {
-    await db.query('DELETE FROM plants WHERE id = $1', [params.id]);
+    await db.query('DELETE FROM plants WHERE id = $1', [id]);
     return NextResponse.json({ message: 'Plant deleted' });
   } catch (error) {
     console.error('Error deleting plant:', error);
@@ -16,14 +18,15 @@ export async function DELETE(
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Record<string, string> }
 ) {
+  const id = context.params.id;
   const { name, species } = await req.json();
 
   try {
     await db.query(
       'UPDATE plants SET name = $1, species = $2 WHERE id = $3',
-      [name, species || null, params.id]
+      [name, species || null, id]
     );
     return NextResponse.json({ message: 'Plant updated' });
   } catch (error) {
