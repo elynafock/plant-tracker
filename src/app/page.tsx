@@ -44,13 +44,25 @@ export default function Home() {
     species: "",
   });
 
-  useEffect(() => {
-    fetch("/api/plants")
-      .then((res) => res.json())
-      .then((data) => setPlants(data));
-  }, []);
+  const loadPlants = async () => {
+    try {
+      const res = await fetch("/api/plants");
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setPlants(data);
+      } else {
+        console.error("API did not return array:", data);
+        setPlants([]);
+      }
+    } catch (err) {
+      console.error("Error loading plants:", err);
+      setPlants([]);
+    }
+  };
 
-  const filteredPlants = getFilteredSortedPlants(plants, search, sortOrder);
+  useEffect(() => {
+    loadPlants();
+  }, []);
 
   const handleAddPlant = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -67,10 +79,11 @@ export default function Home() {
 
     if (res.ok) {
       form.reset();
-      const data = await fetch("/api/plants").then((res) => res.json());
-      setPlants(data);
+      await loadPlants();
     }
   };
+
+  const filteredPlants = getFilteredSortedPlants(plants, search, sortOrder);
 
   return (
     <main className="p-6 max-w-2xl mx-auto">
@@ -155,10 +168,7 @@ export default function Home() {
                           body: JSON.stringify(editForm),
                         });
                         setEditId(null);
-                        const data = await fetch("/api/plants").then((res) =>
-                          res.json()
-                        );
-                        setPlants(data);
+                        await loadPlants();
                       }}
                       className="px-4 py-1 bg-blue-600 text-white rounded"
                     >
@@ -187,10 +197,7 @@ export default function Home() {
                         await fetch(`/api/plants/${plant.id}/water`, {
                           method: "PATCH",
                         });
-                        const data = await fetch("/api/plants").then((res) =>
-                          res.json()
-                        );
-                        setPlants(data);
+                        await loadPlants();
                       }}
                       className="px-4 py-1 bg-green-500 text-white rounded hover:bg-green-600"
                     >
@@ -215,10 +222,7 @@ export default function Home() {
                         await fetch(`/api/plants/${plant.id}`, {
                           method: "DELETE",
                         });
-                        const data = await fetch("/api/plants").then((res) =>
-                          res.json()
-                        );
-                        setPlants(data);
+                        await loadPlants();
                       }}
                       className="px-4 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                     >
@@ -229,6 +233,8 @@ export default function Home() {
               )}
             </div>
           ))
+        ) : plants.length === 0 && search === "" ? (
+          <p className="text-gray-500">No plants yet. Add one above 🌿</p>
         ) : (
           <p className="text-gray-500">No matching plants found.</p>
         )}
