@@ -89,30 +89,31 @@ export default function Home() {
   return (
     <main className="p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">🌱 My Plants</h1>
+      <div className="flex inline">
+        {/* Search */}
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by name or species"
+          className="mb-6 w-full p-2 border rounded-4xl"
+        />
 
-      {/* Search */}
-      <input
-        type="text"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search by name or species"
-        className="mb-6 w-full p-2 border rounded"
-      />
-
-      {/* Sort */}
-      <div className="mb-4 flex items-center gap-2">
-        <label htmlFor="sort" className="text-sm text-gray-600">
-          Sort by last watered:
-        </label>
-        <select
-          id="sort"
-          value={sortOrder}
-          onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
-          className="p-1 border rounded text-sm"
-        >
-          <option value="desc">Newest First</option>
-          <option value="asc">Oldest First</option>
-        </select>
+        {/* Sort */}
+        <div className="mb-4 flex items-center gap-2 ">
+          <label htmlFor="sort" className="text-sm text-gray-600">
+            Sort by last watered:
+          </label>
+          <select
+            id="sort"
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value as "asc" | "desc")}
+            className="p-1 border rounded text-sm"
+          >
+            <option value="desc">Newest First</option>
+            <option value="asc">Oldest First</option>
+          </select>
+        </div>
       </div>
 
       {/* Add */}
@@ -121,7 +122,7 @@ export default function Home() {
           name="name"
           placeholder="Plant name"
           required
-          className="block w-full p-2 border rounded"
+          className="block w-full p-2 border rounded-4xl"
         />
         <input
           name="species"
@@ -142,7 +143,7 @@ export default function Home() {
           filteredPlants.map((plant) => (
             <div
               key={plant.id}
-              className="p-4 border rounded shadow-sm bg-white"
+              className="p-4 border shadow-sm bg-white rounded-lg"
             >
               {editId === plant.id ? (
                 <>
