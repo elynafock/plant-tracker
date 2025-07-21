@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
 
-export async function PATCH(_: Request, { params }: { params: { id: string } }) {
-  const { id } = params;
+export async function PATCH(_: Request, { params }: any) {
+  const id = params.id;
 
   try {
     await db.query(
@@ -15,4 +15,3 @@ export async function PATCH(_: Request, { params }: { params: { id: string } }) 
     return NextResponse.json({ error: 'Failed to water plant' }, { status: 500 });
   }
 }
-  

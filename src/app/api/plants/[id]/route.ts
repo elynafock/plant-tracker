@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import db from '@/lib/db';
 
-export async function DELETE(
-  req: NextRequest,
-  context: { params: Record<string, string> }
-) {
-  const id = context.params.id;
+export async function DELETE(req: NextRequest, { params }: any) {
+  const id = params.id;
 
   try {
     await db.query('DELETE FROM plants WHERE id = $1', [id]);
@@ -16,11 +13,8 @@ export async function DELETE(
   }
 }
 
-export async function PATCH(
-  req: NextRequest,
-  context: { params: Record<string, string> }
-) {
-  const id = context.params.id;
+export async function PATCH(req: NextRequest, { params }: any) {
+  const id = params.id;
   const { name, species } = await req.json();
 
   try {
